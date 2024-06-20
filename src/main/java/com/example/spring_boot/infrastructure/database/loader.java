@@ -27,8 +27,7 @@ public class loader {
     @PostConstruct
     @Transactional
     void loadData() throws IOException {
-        InputStream resource = new ClassPathResource(
-                "resources/stocks.csv").getInputStream();
+        InputStream resource = new ClassPathResource("./stocks.csv").getInputStream();
         try ( BufferedReader reader = new BufferedReader(new InputStreamReader(resource)) ) {
             reader.lines().skip(1).map(  line ->
                     Arrays.stream(line.split(",")).dropWhile(String::isEmpty)
