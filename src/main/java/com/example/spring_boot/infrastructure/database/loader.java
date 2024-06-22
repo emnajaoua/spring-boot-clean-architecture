@@ -21,9 +21,6 @@ import java.util.UUID;
 
 @Service
 public class loader {
-//    @Autowired
-//    IStockRepository repository;
-
     @Autowired
     JdbcTemplate jdbcTemplate;
 

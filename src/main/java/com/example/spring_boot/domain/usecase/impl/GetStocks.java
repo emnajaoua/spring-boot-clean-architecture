@@ -34,8 +34,8 @@ public class GetStocks implements IGetStocks {
                 it.getDate(),
                 it.getSymbol(),
                 it.getVolume(),
-                0.0,
-                0.0
+                it.getVariation(),
+                it.getSpread()
         )).collect(Collectors.toList());
     };
 }

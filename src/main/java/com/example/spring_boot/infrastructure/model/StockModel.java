@@ -48,4 +48,12 @@ public class StockModel {
         this.variation = variation;
         this.spread = spread;
     }
+
+    public Double getVariation() {
+        return this.variation;
+    }
+
+    public Double getSpread() {
+        return this.spread;
+    }
 }
