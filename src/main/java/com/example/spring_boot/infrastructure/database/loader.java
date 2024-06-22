@@ -1,6 +1,5 @@
 package com.example.spring_boot.infrastructure.database;
 
-import com.example.spring_boot.infrastructure.spec.IStockRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
@@ -44,11 +43,11 @@ public class loader {
                         UUID.randomUUID(),
                         formatter.parse(csvRecord.get("Date")),
                         csvRecord.get("Symbol"),
-                        ConvertIntoLong(csvRecord.get("Volume")),
-                        ConvertIntoDouble(csvRecord.get("High")) - ConvertIntoDouble(csvRecord.get("Low")),
-                        ConvertIntoDouble(csvRecord.get("Open")) - ConvertIntoDouble(csvRecord.get("Close")),
-                        ConvertIntoDouble(csvRecord.get("High")),
-                        ConvertIntoDouble(csvRecord.get("Low"))
+                        convertIntoLong(csvRecord.get("Volume")),
+                        convertIntoDouble(csvRecord.get("High")) - convertIntoDouble(csvRecord.get("Low")),
+                        convertIntoDouble(csvRecord.get("Open")) - convertIntoDouble(csvRecord.get("Close")),
+                        convertIntoDouble(csvRecord.get("High")),
+                        convertIntoDouble(csvRecord.get("Low"))
                 );
             }
 
@@ -58,7 +57,7 @@ public class loader {
 
     }
 
-    private Long ConvertIntoLong(String xVal)
+    private Long convertIntoLong(String xVal)
     {
         try
         {
@@ -70,7 +69,7 @@ public class loader {
         }
     }
 
-    private Double ConvertIntoDouble(String xVal)
+    private Double convertIntoDouble(String xVal)
     {
         try
         {
