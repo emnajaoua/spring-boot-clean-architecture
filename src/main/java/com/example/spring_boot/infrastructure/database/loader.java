@@ -22,8 +22,8 @@ import java.util.UUID;
 
 @Service
 public class loader {
-    @Autowired
-    IStockRepository repository;
+//    @Autowired
+//    IStockRepository repository;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -35,20 +35,20 @@ public class loader {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(resource, "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim().withIgnoreEmptyLines())) {
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreEmptyLines())) {
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
                 jdbcTemplate.update(
-                        "INSERT INTO STOCKS (id, date, symbol, volume, variation, spread, high, low) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
+                        "INSERT INTO stocks (id, date, symbol, volume, variation, spread, high, low) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
                         UUID.randomUUID(),
                         formatter.parse(csvRecord.get("Date")),
                         csvRecord.get("Symbol"),
-                        Long.parseLong(csvRecord.get("Volume")),
-                        Double.parseDouble(csvRecord.get("High")) - Double.parseDouble(csvRecord.get("Low")),
-                        Double.parseDouble(csvRecord.get("Open")) - Double.parseDouble(csvRecord.get("Close")),
-                        Double.parseDouble(csvRecord.get("High")),
-                        Double.parseDouble(csvRecord.get("Low"))
+                        ConvertIntoLong(csvRecord.get("Volume")),
+                        ConvertIntoDouble(csvRecord.get("High")) - ConvertIntoDouble(csvRecord.get("Low")),
+                        ConvertIntoDouble(csvRecord.get("Open")) - ConvertIntoDouble(csvRecord.get("Close")),
+                        ConvertIntoDouble(csvRecord.get("High")),
+                        ConvertIntoDouble(csvRecord.get("Low"))
                 );
             }
 
@@ -56,5 +56,29 @@ public class loader {
             throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
         }
 
+    }
+
+    private Long ConvertIntoLong(String xVal)
+    {
+        try
+        {
+            return Long.parseLong(xVal);
+        }
+        catch(Exception ex)
+        {
+            return 0L;
+        }
+    }
+
+    private Double ConvertIntoDouble(String xVal)
+    {
+        try
+        {
+            return Double.parseDouble(xVal);
+        }
+        catch(Exception ex)
+        {
+            return 0D;
+        }
     }
 }
