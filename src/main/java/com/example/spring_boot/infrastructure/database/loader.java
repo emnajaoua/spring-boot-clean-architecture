@@ -1,7 +1,12 @@
 package com.example.spring_boot.infrastructure.database;
 
+import com.example.spring_boot.infrastructure.spec.IStockRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -10,46 +15,46 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Date;
-import java.util.Arrays;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 public class loader {
+    @Autowired
+    IStockRepository repository;
 
-    private final JdbcTemplate jdbcTemplate;
-
-    public loader(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @PostConstruct
     @Transactional
-    void loadData() throws IOException {
+    void loadData() throws IOException, RuntimeException {
         InputStream resource = new ClassPathResource("./stocks.csv").getInputStream();
-        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(resource)) ) {
-            reader.lines().skip(1).map(  line ->
-                    Arrays.stream(line.split(",")).dropWhile(String::isEmpty)
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(resource, "UTF-8"));
+             CSVParser csvParser = new CSVParser(fileReader,
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim().withIgnoreEmptyLines())) {
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
-        ).forEach( (Stream<String> fields) -> {
-                            if (fields.count() >= 8) {
-                    jdbcTemplate.update(
-                            "INSERT INTO stocks(id, date, symbol, open, high, low, close, adj_close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            UUID.randomUUID(),
-                            Date.valueOf(fields.toList().get(0)),
-                            fields.toList().get(1),
-                            Double.valueOf(fields.toList().get(2)),
-                            Double.valueOf(fields.toList().get(3)),
-                            Double.valueOf(fields.toList().get(4)),
-                            Double.valueOf(fields.toList().get(5)),
-                            Double.valueOf(fields.toList().get(6)),
-                            Long.valueOf(fields.toList().get(7))
-                    );
-                }
-            });
+            for (CSVRecord csvRecord : csvRecords) {
+                jdbcTemplate.update(
+                        "INSERT INTO STOCKS (id, date, symbol, volume, variation, spread, high, low) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ",
+                        UUID.randomUUID(),
+                        formatter.parse(csvRecord.get("Date")),
+                        csvRecord.get("Symbol"),
+                        Long.parseLong(csvRecord.get("Volume")),
+                        Double.parseDouble(csvRecord.get("High")) - Double.parseDouble(csvRecord.get("Low")),
+                        Double.parseDouble(csvRecord.get("Open")) - Double.parseDouble(csvRecord.get("Close")),
+                        Double.parseDouble(csvRecord.get("High")),
+                        Double.parseDouble(csvRecord.get("Low"))
+                );
+            }
+
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
         }
 
-        }
-
+    }
 }

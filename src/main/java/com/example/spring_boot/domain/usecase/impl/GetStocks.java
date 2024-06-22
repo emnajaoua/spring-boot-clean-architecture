@@ -7,7 +7,6 @@ import com.example.spring_boot.infrastructure.spec.IStockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ public class GetStocks implements IGetStocks {
     }
 
     @Override
-    public List<Stock> getStocksUseCase(String symbol, Instant fromDate) {
+    public List<Stock> getStocksUseCase(String symbol, Date fromDate) {
         List<StockModel> stocks;
         if (symbol == null && fromDate == null) {
             stocks = I_STOCK_REPOSITORY.findAll();

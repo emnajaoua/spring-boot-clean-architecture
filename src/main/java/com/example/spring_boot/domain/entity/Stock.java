@@ -1,11 +1,11 @@
 package com.example.spring_boot.domain.entity;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 public class Stock {
     UUID id;
-    Instant date;
+    Date date;
     String symbol;
     Long volume;
     Double variation; // difference between highest and lowest price
@@ -24,7 +24,7 @@ public class Stock {
         return id;
     }
 
-    public Stock(UUID id, Instant date, String symbol, Long volume, Double variation, Double spread) {
+    public Stock(UUID id, Date date, String symbol, Long volume, Double variation, Double spread) {
         this.id = id;
         this.date = date;
         this.symbol = symbol;

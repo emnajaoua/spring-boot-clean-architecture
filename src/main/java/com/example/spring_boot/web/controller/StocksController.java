@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +24,10 @@ public class StocksController {
     }
 
     @GetMapping(value = "")
-    public List<Stock> getStocks(@RequestParam String symbol,
+    public List<Stock> getStocks(@RequestParam(required = false) String symbol,
                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                 @RequestParam Date fromDate)
+                                 @RequestParam(required = false) Date fromDate)
     {
-        return IGetStocksUseCase.getStocksUseCase(symbol, fromDate.toInstant());
+        return IGetStocksUseCase.getStocksUseCase(symbol, fromDate);
     }
 }

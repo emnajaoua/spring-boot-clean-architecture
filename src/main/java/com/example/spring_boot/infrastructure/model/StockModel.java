@@ -1,33 +1,34 @@
 package com.example.spring_boot.infrastructure.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "stocks")
+@Table(name = "STOCKS")
 public class StockModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     UUID id;
-    Instant date;
+    Date date;
     String symbol;
     Long volume;
     Double variation; // difference between highest and lowest price
     Double spread; // difference between opening and closing price
     Double high;
     Double low;
-    Double openingPrice;
-    Double closingPrice;
-    Double adjClosePrice;
+
+    public StockModel() {
+
+    }
+
 
     public UUID getId() {
         return this.id;
     }
 
-    public Instant getDate() {
+    public Date getDate() {
         return this.date;
     }
 
@@ -39,7 +40,12 @@ public class StockModel {
         return this.volume;
     }
 
-    public Double getOpen() {
-        return this.openingPrice;
+    public StockModel(UUID id, java.util.Date date, String symbol, Long volume, Double variation, Double spread) {
+        this.id = id;
+        this.date = date;
+        this.symbol = symbol;
+        this.volume = volume;
+        this.variation = variation;
+        this.spread = spread;
     }
 }
