@@ -1,10 +1,15 @@
 package com.example.spring_boot.domain.entity;
 
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
 import java.util.Date;
 import java.util.UUID;
 
 public class Stock {
     UUID id;
+
+    @Temporal(TemporalType.DATE)
     Date date;
     String symbol;
     Long volume;
@@ -31,5 +36,25 @@ public class Stock {
         this.volume = volume;
         this.variation = variation;
         this.spread = spread;
+    }
+
+    public String getSymbol() {
+        return this.symbol;
+    }
+
+    public Date getDate() {
+        return this.date;
+    }
+
+    public Long getVolume() {
+        return this.volume;
+    }
+
+    public Double getVariation() {
+        return this.variation;
+    }
+
+    public Double getSpread() {
+        return this.spread;
     }
 }

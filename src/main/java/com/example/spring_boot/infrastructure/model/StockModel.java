@@ -11,6 +11,7 @@ public class StockModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     UUID id;
+    @Temporal(TemporalType.DATE)
     Date date;
     String symbol;
     Long volume;

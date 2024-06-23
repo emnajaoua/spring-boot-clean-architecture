@@ -25,7 +25,7 @@ public class StocksController {
 
     @GetMapping(value = "")
     public List<Stock> getStocks(@RequestParam(required = false) String symbol,
-                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                 @DateTimeFormat(pattern = "yyyy-MM-dd")
                                  @RequestParam(required = false) Date fromDate)
     {
         return IGetStocksUseCase.getStocksUseCase(symbol, fromDate);

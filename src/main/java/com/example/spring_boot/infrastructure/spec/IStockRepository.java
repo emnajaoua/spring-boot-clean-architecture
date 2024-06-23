@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface IStockRepository extends JpaRepository<StockModel, UUID> {
-    List<StockModel> findBySymbolOrDateGreaterThanEqual(String symbol, Date fromDate);
+    List<StockModel> findBySymbolAndDateGreaterThanEqual(String symbol, Date fromDate);
 }

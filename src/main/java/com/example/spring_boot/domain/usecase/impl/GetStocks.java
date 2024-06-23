@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,8 +26,8 @@ public class GetStocks implements IGetStocks {
         if (symbol == null && fromDate == null) {
             stocks = I_STOCK_REPOSITORY.findAll();
         } else {
-            stocks = I_STOCK_REPOSITORY.findBySymbolOrDateGreaterThanEqual(symbol, fromDate);
-        };
+            stocks = I_STOCK_REPOSITORY.findBySymbolAndDateGreaterThanEqual(symbol, fromDate);
+        }
         return stocks.stream().map(it -> new Stock(
                 it.getId(),
                 it.getDate(),
@@ -36,6 +35,6 @@ public class GetStocks implements IGetStocks {
                 it.getVolume(),
                 it.getVariation(),
                 it.getSpread()
-        )).collect(Collectors.toList());
+        )).toList();
     };
 }
